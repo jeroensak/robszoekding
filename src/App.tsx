@@ -26,6 +26,14 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     marginBottom: theme.spacing(2),
   },
+  title: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#3F51B5',
+    fontSize: '2em',
+  }
+  ,
   input: {
     width: "100%",
   },
@@ -41,8 +49,9 @@ function App() {
 
   const searchResult = useSearch(value, filters);
   const classes = useStyles();
-  const filteredFilters = searchResult?.aggregations;
+  const filteredFilters = searchResult?.aggregations.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
 
+  console.log(filteredFilters);
   const MemoedFilterComponent = React.useMemo(() => {
     return (
       <Filters
@@ -56,6 +65,8 @@ function App() {
 
   return (
     <div className={classes.root}>
+    <div className={classes.title}> SEARCH DEMO APP </div>
+    <br/>
       <Grid container spacing={10}>
         <Grid item xs={4}>
           {MemoedFilterComponent}
@@ -69,11 +80,9 @@ function App() {
               placeholder="search..."
             />
             <Divider />
-
-            <List>
-              <ListItem>Hits: {searchResult?.hits}</ListItem>
-              <Divider />
-
+            <br/>
+            Hits: {searchResult?.hits}
+            <List>          
               {searchResult?.results.map((result: any, index: number) => (
                 <ArticleListItem searchResult={result} key={index} />
               ))}

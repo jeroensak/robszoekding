@@ -8,6 +8,25 @@ import {
 import Checkbox from "@material-ui/core/Checkbox/Checkbox";
 import React from "react";
 import { IFilter } from "./Filters";
+import Chip from '@material-ui/core/Chip';
+import clsx from 'clsx';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    '& > *': {
+      margin: theme.spacing(1),
+    },
+  },
+  shape: {
+    marginTop: 12,
+    marginLeft: -10,
+    height: 20,
+      },
+  shapeCircle: {
+    borderRadius: '50%',
+  },
+}));
 
 const Filter = ({
   onFilterChange,
@@ -42,13 +61,26 @@ const Filter = ({
     }
   };
 
+  function unCamelCase (str){
+    return str
+        // insert a space between lower & upper
+        .replace(/([a-z])([A-Z])/g, '$1 $2')
+        // space before last upper in a sequence followed by lower
+        .replace(/\b([A-Z]+)([A-Z])([a-z])/, '$1 $2$3')
+        // uppercase the first character
+        .replace(/^./, function(str){ return str.toUpperCase(); })
+        
+}
+
+  var name =unCamelCase(  filter.name).toUpperCase();
+  const classes = useStyles();
   return (
-    <>
       <Paper key={filter.name} className={className}>
-        <Typography>{filter.name}</Typography>
+        <Typography>{name}</Typography>
         <Divider />
         <FormGroup row>
           {filter.buckets.map((bucket: any, index: number) => (
+            <>
             <FormControlLabel
               key={index}
               control={
@@ -63,10 +95,12 @@ const Filter = ({
               }
               label={`${bucket.value} (${bucket.hits})`}
             />
+             {/* <Chip label={bucket.hits} size="small" className={classes.shape} color="primary"/> */}
+            </>
           ))}
         </FormGroup>
       </Paper>
-    </>
+    
   );
 };
 
