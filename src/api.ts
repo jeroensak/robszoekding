@@ -42,7 +42,7 @@ const getSearchBody = (value: string, filters: IFilter[]) => ({
   searchOperator: 0,
   skip: 0,
   take: 100,
-  maxFilterResults: 8,
+  maxFilterResults: 50,
   searchMode: 3,
   filters,
 });
