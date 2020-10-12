@@ -1,14 +1,14 @@
 import React from "react";
 import { useDebounce } from "use-debounce/lib";
 
-const baseUrl = "http://localhost:5200";
+const baseUrl = "http://localhost:5000";
 
 export const useSearch = (searchString: string) => {
   const [debouncedValue] = useDebounce(searchString, 200);
-  const [result, setResult] = React.useState<string | null>(null);
+  const [result, setResult] = React.useState<any | null>(null);
 
   React.useEffect(() => {
-    if (debouncedValue.length > 3) {
+    if (debouncedValue.length > 0) {
       performSearch(debouncedValue).then(setResult);
     }
   }, [debouncedValue]);
