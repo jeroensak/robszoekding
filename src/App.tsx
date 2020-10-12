@@ -11,6 +11,7 @@ import {
   Paper,
 } from "@material-ui/core";
 import ArticleListItem from "./ArticleListItem";
+import Filters, { IFilter } from "./Filters";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,7 +22,6 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     padding: theme.spacing(2),
-    textAlign: "center",
     color: theme.palette.text.secondary,
     width: "100%",
     marginBottom: theme.spacing(2),
@@ -33,20 +33,32 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
   const [value, setValue] = React.useState("");
-  const searchResult = useSearch(value);
+  const [filters, setFilters] = React.useState([] as IFilter[]);
+
+  React.useEffect(() => {
+    setFilters([]);
+  }, [value]);
+
+  const searchResult = useSearch(value, filters);
   const classes = useStyles();
+  const filteredFilters = searchResult?.aggregations;
+
+  const MemoedFilterComponent = React.useMemo(() => {
+    return (
+      <Filters
+        filters={filteredFilters}
+        className={classes.paper}
+        activeFilters={filters}
+        onFilterChange={setFilters}
+      />
+    );
+  }, [filteredFilters, filters]);
 
   return (
     <div className={classes.root}>
       <Grid container spacing={10}>
         <Grid item xs={4}>
-          <Paper className={classes.paper}>
-            Text
-            <Divider />
-            Hello
-          </Paper>
-          <Paper className={classes.paper}>Hello</Paper>
-          <Paper className={classes.paper}>Hello</Paper>
+          {MemoedFilterComponent}
         </Grid>
         <Grid item xs={8}>
           <Paper className={classes.paper}>
